@@ -1,0 +1,31 @@
+<h1><%= camp.title %></h1>
+<p>Total Likes: <span id="likeCounter"><%= camp.likes.length %></span></p>
+
+<% if(camp.likes.includes(currentUser)) { %>
+    <button>Liked</button>
+<% } else { %>
+    <button>Like</button>
+<% } %>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+<script>
+    const btn = document.querySelector("button");
+    const likeCounterSpan = document.querySelector("#likeCounter");
+
+    btn.addEventListener("click", function(e) {
+    e.preventDefault();
+    if(this.textContent === "Like") {
+        this.textContent = "Liked";
+    } else {
+        this.textContent = "Like";
+    }
+    axios.get(`/campgrounds/<%= camp._id %>/likes`)
+        .then(function(res) {
+          console.log(res);
+          likeCounterSpan.innerText = res.data.totalLikes;
+        })
+        .catch(function() {
+        console.log("Some Error :(");
+        });
+    })
+</script>
