@@ -1,5 +1,40 @@
 <ul>
     <% for (let camp of campgrounds) { %>
-        <li><a href="/campgrounds/<%= camp._id %>"><%= camp._id %></a></li>
-    <% } %>
+        <li>
+            <a href="/campgrounds/<%= camp._id %>"><%= camp._id %></a>
+
+            <% if(camp.likes.includes(currentUser)) { %>
+                <button data="<%= camp._id %>">Liked</button>
+            <% } else { %>
+                <button data="<%= camp._id %>">Like</button>
+            <% } %>
+        <% } %>
+        </li>
 </ul>
+
+
+<script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+<script>
+    const btns = document.querySelectorAll("button");
+    // const likeCounterSpan = document.querySelector("#likeCounter");
+
+    for(let btn of btns) {
+        btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        if(this.textContent === "Like") {
+            this.textContent = "Liked";
+        } else {
+            this.textContent = "Like";
+        }
+        const camp_id = this.getAttribute("data");
+        axios.get(`/campgrounds/${camp_id}/likes`)
+            .then(function(res) {
+            console.log(res);
+            // likeCounterSpan.innerText = res.data.totalLikes;
+            })
+            .catch(function() {
+            console.log("Some Error :(");
+            });
+        })
+    }
+</script>
